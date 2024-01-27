@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#define MAX_LENGTH 100
+#define MAX_SITES 2
+#define MAX_STRING_LENGTH 20
+typedef struct tm Date;
+
+typedef struct profil
+{
+    char *nom;             // nom du personne
+    char *prenom;          // prenom du personne
+    char *adr;             // son adresse
+    Date datedenaissence;  // sa date de naissance
+    char *courriel;        // son adresse email
+    int num;               // son numero de telephone
+} profil;
+
+typedef struct atr
+{
+    char *pseudo;               // pseudo d un auteur
+    Date date_premier_msg;      // la date de premiere message
+    Date date_dernier_msg;      // la date de derniere message
+    int nombre_msg;             // nombre de message
+    profil profilatr;          // information sur le profil d auteur
+} Auteur;
+
+typedef struct msg
+{
+    char *titre;               // titre de message
+    char *texte;               // texte de cette message
+    Date date_publication;     // date de publication de message
+    Auteur auteur;             // information sur l'auteur du message
+    int id;                    // identifiant unique
+    int id_original;           // identifiant message original si réponse, sinon 0
+    int id_rubrique;           // identifiant rubrique au quel appartient
+} Message;
+
+typedef struct rb
+{
+    char *theme;                       // theme de rubrique
+    Date datedecreation;               // date de creation du rubrique
+    char *courrielanim;                // adresse email de son animateur
+    char liste_site_internet[MAX_SITES][MAX_STRING_LENGTH];  // une liste de sites internet relatifs à cette rubrique
+    int id_rubrique;                   // identifiant rubrique
+} rubrique;
+
+typedef struct forum
+{
+    rubrique *tab_rb;//ensemble de rubriques
+    char *adresseinternet;//adresse internet de forum
+    char *courrielresp;//adresse email de son responsable 
+} forum;
+
+//structure liste chaine de rubrique 
+typedef struct cellrb
+{
+    rubrique rb;
+    struct cellrb* suivant_rb;
+} liste_rb;
+
+//structure liste chaine de forum
+typedef struct cellfr
+{
+    forum fr;
+    struct cellfr* suivant_fr;
+} liste_fr;
+
+
+//liste chainee d auteur 
+typedef struct Cellatr
+{
+    Auteur atr;                    // Donnée
+    struct Cellatr *suivant_atr;       // pointeur sur l’élément
+} liste_atr;
+
+//liste chainee de message 
+typedef struct Cellmsg
+{
+    Message msg;                  // Donnée
+    struct Cellmsg *suivant_msg;      // pointeur sur l’élément
+} liste_msg;
+
+//structure liste chaine de profil
+typedef struct cellprofil
+{
+    profil pf;
+    struct cellprofil* suivant_profil;
+} liste_profil;

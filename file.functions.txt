@@ -1,0 +1,1218 @@
+// **********les fonctions de saisie des structures
+
+//fonction saisie rubrique
+rubrique rb_saisie(int *comt_id)
+{
+    
+    rubrique rb;  // creer une rubrique
+    //Allocation mémoire pour les champs de type pointeur
+    rb.theme = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    rb.courrielanim = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+
+    printf("donner theme : ");
+    fgets(rb.theme, MAX_STRING_LENGTH, stdin);
+    rb.theme[strcspn(rb.theme, "\n")] = '\0'; 
+    printf("donner annee de creation:AAAA ");
+    scanf("%d", &rb.datedecreation.tm_year);  // saisie l annee de creation d une rubrique
+    printf("donner mois de creation :MM ");
+    scanf("%d", &rb.datedecreation.tm_mon);  // saisie le mois de creation d une rubrique
+    printf("donner jour de creation :DD ");
+    scanf("%d", &rb.datedecreation.tm_mday);  // saisie le jour de creation d une rubrique
+    while (getchar() != '\n');
+
+    printf("donner courrielanim: ");
+    fgets(rb.courrielanim, MAX_STRING_LENGTH, stdin);
+    rb.courrielanim[strcspn(rb.courrielanim, "\n")] = '\0';
+
+    int nbr_sites_internet;
+    printf("donner nombres des sites internet:\n ");
+    scanf("%d", &nbr_sites_internet);
+    
+    while (getchar() != '\n');
+    for (int i = 0; i < nbr_sites_internet; i++) 
+    {
+        printf("donner site_internet %d",i+1);
+        fgets(rb.liste_site_internet[i], MAX_STRING_LENGTH, stdin);
+        rb.liste_site_internet[i][strcspn(rb.liste_site_internet[i], "\n")] = '\0';
+    }
+    rb.id_rubrique = *comt_id;
+    (*comt_id)++;
+    free(rb.theme);
+    free(rb.courrielanim);
+    return rb;
+}
+
+//fonction saisie forum
+
+forum forum_saisie(int *comt_id_fr)
+{
+    forum fr;//creer un FORUM
+    fr.adresseinternet = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    fr.courrielresp = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+
+    printf("donner adresse internet : ");
+    fgets(fr.adresseinternet, MAX_STRING_LENGTH, stdin);//saisie une adresse internet d un forum
+    printf("donner courriel de responsable : ");
+    fgets(fr.adresseinternet, MAX_STRING_LENGTH, stdin);//saisie une adresse email de son responsable
+    free(fr.adresseinternet);
+    free(fr.courrielresp);
+    (*comt_id_fr)++;
+    return fr;
+}
+
+//fonction saisie profil
+int numinscri = 0;
+profil profil_saisie() 
+{
+    profil pf; // creer une rubrique
+    
+    
+    //Allocation mémoire pour les champs de type pointeur
+    pf.nom = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    pf.prenom = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    pf.adr = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    pf.courriel = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    
+    printf("donner nom : ");
+    fgets(pf.nom, MAX_STRING_LENGTH, stdin);//saisie le nom d une personne
+    pf.nom[strcspn(pf.nom, "\n")] = '\0'; 
+    
+    printf("donner prenom : ");
+    fgets(pf.prenom, MAX_STRING_LENGTH, stdin);//saisie son prenom
+    
+    printf("donner adresse  : ");
+    fgets(pf.adr, MAX_STRING_LENGTH, stdin);//saisie son adresse
+    pf.adr[strcspn(pf.adr, "\n")] = '\0';
+    
+    printf("donner l annee de naissance :AAAA ");
+    scanf("%d",&pf.datedenaissence.tm_year);//saisie l annee de naissance
+    printf("donner le mois de naissance:MM ");
+    scanf("%d",&pf.datedenaissence.tm_mon);//saisie le mois de naissance 
+    printf("donner le jour de naissance:DD ");
+    scanf("%d",&pf.datedenaissence.tm_mday);//saisie le jour de naissance
+    printf("donner num: ");
+    scanf("%d", &pf.num);//saisie son numero de telephone 
+    
+    while (getchar() != '\n');
+    
+    printf("donner courriel : ");
+    fgets(pf.courriel, MAX_STRING_LENGTH, stdin);//saisie son adresse email
+    pf.courriel[strcspn(pf.courriel, "\n")] = '\0';
+    
+    
+    
+    return pf;
+}
+// Function to clear the input buffer
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+//fonction saisie message 
+
+Message saisie_message(int *comt_id_msg)
+{
+    Message msg;//creer un message
+    //Allocation mémoire pour les champs de type pointeur
+    msg.titre = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    msg.texte = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    int reponse;
+    int id_rb;
+    
+    printf("Donner le titre du message : ");
+    fgets(msg.titre, MAX_STRING_LENGTH, stdin);//saisie le titre d un message 
+    msg.titre[strcspn(msg.titre, "\n")] = '\0'; 
+    printf("Donner le texte du message : ");
+    fgets(msg.texte, MAX_STRING_LENGTH, stdin);//saisie le texte d un message 
+    msg.texte[strcspn(msg.texte, "\n")] = '\0'; 
+    printf("Donner l'année de publication (YYYY) : ");
+    scanf("%d", &msg.date_publication.tm_year);// saisie lannee de publication
+    printf("Donner le mois de publication ( MM) : ");
+    scanf("%d", &msg.date_publication.tm_mon);//saisie le mois de publication
+    printf("Donner le jour de publication (DD) : ");
+    scanf("%d", &msg.date_publication.tm_mday);//saisie le jour de publication
+    // reponse?
+    printf("si le message est une reponse, tapez 1, sinon 0\n");
+    scanf("%d", &reponse);
+    if (!reponse)
+    {  // n'est pas une réponse
+        msg.id_original = 0;
+    }
+    else
+    {  // C'est une réponse
+        printf("Tapez le numéro du message original\n");
+        scanf("%d", &msg.id_original);
+    }
+    printf("tapez l'identifiant de la rubrique auquel appartient\n");
+    scanf("%d", &id_rb);//saisie l identifiant de la rubrique
+    free(msg.titre);
+    free(msg.texte);
+     // Clear the input buffer
+    clearInputBuffer();
+    msg.id = *comt_id_msg;
+    (*comt_id_msg)++;
+    return msg;
+}
+//fonction saisie auteur
+Auteur saisie_auteur()
+{
+    Auteur aut;//creer un auteur 
+    //Allocation mémoire pour les champs de type pointeur
+    aut.pseudo = (char *)malloc(MAX_STRING_LENGTH * sizeof(char));
+    printf("Donner le pseudo de l'auteur : ");
+    fgets(aut.pseudo, MAX_STRING_LENGTH, stdin);//saisie le pseudo d un auteur 
+    aut.pseudo[strcspn(aut.pseudo, "\n")] = '\0'; 
+    printf("Donner l'année du premier message (YYYY ) : \n");
+    scanf("%d", &aut.date_premier_msg.tm_year);//saisie l annee de premier message 
+    printf("Donner le mois du premier message (MM) : \n");
+    scanf("%d", &aut.date_premier_msg.tm_mon);//saisie le mois de premier message
+    printf("Donner le jour du premier message ( DD) : ");
+    scanf("%d", &aut.date_premier_msg.tm_mday);//saisie le jour de premier message
+    printf("Donner l'année du dernier message (YYYY) : \n");
+    scanf("%d", &aut.date_dernier_msg.tm_year);//saisie l annee de dernier message
+    printf("Donner le mois du dernier message (MM) : \n");
+    scanf("%d", &aut.date_dernier_msg.tm_mon);//saisie le mois de dernier message
+    printf("Donner le jour du dernier message (DD) : \n");
+    scanf("%d", &aut.date_dernier_msg.tm_mday);//saisie le jour de dernier message
+    printf("Donner le nombre de messages : \n");
+    scanf("%d", &aut.nombre_msg);//saisie le nombre de messages 
+    free(aut.pseudo);
+    // Clear the input buffer
+    clearInputBuffer();
+    return aut;
+}
+
+// les fonctions d affichage des structures
+void affiche_rubrique(rubrique rb)
+{
+    printf("theme:%s \n", rb.theme);               // affichage de theme du rubrique
+    printf("annee:%d \n", rb.datedecreation.tm_year);  // affichage d annee de creation d une rubrique
+    printf("mois:%d \n", rb.datedecreation.tm_mon);   // affichage du mois de creation d une rubrique
+    printf("jour:%d \n", rb.datedecreation.tm_mday);  // affichage du jour de creation d une rubrique
+    printf("l adresse email de son animateur:%s \n", rb.courrielanim);  // adresse email de l animateur du rubrique
+    for (int i = 0; i < MAX_SITES; i++)
+    {
+        if (rb.liste_site_internet[i][0] != '\0')
+            printf("%d : %s \n", i+1 ,rb.liste_site_internet[i]);
+    }
+}
+
+void affiche_forum(forum fr)
+{
+    printf("Adresse internet: %s\n", fr.adresseinternet);//affichage d adresse internet de forum
+    printf("Courriel resp: %s\n", fr.courrielresp);//affichage d adresse email de son rsponsable 
+}
+
+
+void affiche_profil(profil pf)
+{
+    printf("Numinscri: %d\n",numinscri);//affichage du numero d inscription du personne 
+    printf("Nom: %s \n", pf.nom);//affichage de son nom
+    printf("Prenom: %s \n", pf.prenom);//affichage de son prenom
+    printf("Adresse: %s \n", pf.adr);//affichage de son adresse 
+    //affichage de sa date de naissance 
+    printf("annee de naissance:%d \n",pf.datedenaissence.tm_year);
+    printf("mois de naissance:%d \n",pf.datedenaissence.tm_mon);
+    printf("jour de naissance:%d \n",pf.datedenaissence.tm_mday);
+    
+    printf("Courriel: %s \n", pf.courriel);//affichage de son adresse email 
+    printf("Num: %d \n", pf.num);//affichage de son numero de telephone
+}
+void afficher_message(Message msg)
+{
+    printf("Le titre du message est : %s\n", msg.titre);//affichage de titre de message 
+    printf("Le texte du message est : %s\n", msg.texte);//affichage de texte de message 
+    
+    printf("annee :%d\n", msg.date_publication.tm_year);// affichage d annee de publication de message
+    printf("mois :%d\n", msg.date_publication.tm_mon);// affichage de mois de publication de message
+    printf("jour :%d\n", msg.date_publication.tm_mday);// affichage de jour de publication de message
+}
+
+void afficher_auteur(Auteur a)
+{
+    printf("Le pseudo est : %s\n", a.pseudo);// affichage de pseudo d auteur 
+    
+    printf("La date du premier message est ");// affichage de premiere message
+    printf("annee :%d\n", a.date_premier_msg.tm_year);
+    printf("mois :%d\n", a.date_premier_msg.tm_mon);
+    printf("jour :%d\n", a.date_premier_msg.tm_mday);
+
+    printf("La date du dernier message est:");// affichage date de derniere message
+    printf("annee :%d\n", a.date_dernier_msg.tm_year);
+    printf("mois :%d\n", a.date_dernier_msg.tm_mon);
+    printf("jour :%d\n", a.date_dernier_msg.tm_mday);
+
+    printf("Le nombre de messages est : %d\n", a.nombre_msg);//affichage de nombre de messages
+}
+
+// Ajouter une rubrique à la liste chaînée
+void ajouter_rubrique(liste_rb** tete, rubrique donnee) {
+    liste_rb* nouvelle_rubrique = (liste_rb*)malloc(sizeof(liste_rb));//allocation d une cellule de rubrique 
+    nouvelle_rubrique->rb = donnee;
+    nouvelle_rubrique->suivant_rb = NULL;
+
+    // Si la liste est vide la nouvelle rubrique devient la tête de la liste
+    if (*tete == NULL) {
+        *tete = nouvelle_rubrique;
+        return;
+    }
+
+    // Sinon, parcourir la liste jusqu à la fin et ajouter la rubrique
+    liste_rb* actuel = *tete;
+    while (actuel->suivant_rb != NULL) {
+        actuel = actuel->suivant_rb;
+    }
+    actuel->suivant_rb = nouvelle_rubrique;
+}
+
+// Afficher la liste de rubriques
+void afficher_liste_rubriques(liste_rb* tete) {
+    if (tete == NULL) {
+        printf("La liste de rubriques est vide.\n");
+        return;
+    }
+
+    printf("Liste de rubriques :\n");
+    while (tete != NULL) {
+        affiche_rubrique(tete->rb);
+        tete = tete->suivant_rb;
+    }
+}
+
+// Ajouter un forum à la liste chaînée
+void ajouter_forum(liste_fr** tete, forum donnee) {
+    liste_fr* nouvelle_forum = (liste_fr*)malloc(sizeof(liste_fr));//allocation d une cellule de rubrique 
+    nouvelle_forum->fr = donnee;
+    nouvelle_forum->suivant_fr = NULL;
+
+    // Si la liste est vide la nouvel forum devient la tête de la liste
+    if (*tete == NULL) {
+        *tete = nouvelle_forum;
+        return;
+    }
+
+    // Sinon, parcourir la liste jusqu à la fin et ajouter le forum
+    liste_fr* actuel = *tete;
+    while (actuel->suivant_fr != NULL) {
+        actuel = actuel->suivant_fr;
+    }
+    actuel->suivant_fr = nouvelle_forum;
+}
+
+// Afficher la liste de forums
+void afficher_liste_forums(liste_fr* tete) {
+    if (tete == NULL) {
+        printf("La liste de forums est vide.\n");
+        return;
+    }
+
+    printf("Liste de forums :\n");
+    while (tete != NULL) {
+        affiche_forum(tete->fr);
+        tete = tete->suivant_fr;
+    }
+}
+
+// Ajouter un profil à la liste chaînée
+void ajouter_profil(liste_profil** tete, profil donnee)
+{
+    liste_profil* nouvelle_profil = (liste_profil*)malloc(sizeof(liste_profil));//allocation d une cellule de rubrique 
+    nouvelle_profil->pf = donnee;
+    nouvelle_profil->suivant_profil = NULL;
+
+    // Si la liste est vide la nouvel profil devient la tête de la liste
+    if (*tete == NULL) {
+        *tete = nouvelle_profil;
+        return;
+    }
+
+    // Sinon, parcourir la liste jusqu à la fin et ajouter le profil
+    liste_profil* actuel = *tete;
+    while (actuel->suivant_profil != NULL) 
+    {
+        actuel = actuel->suivant_profil;
+    }
+    actuel->suivant_profil = nouvelle_profil;
+}
+
+// Afficher la liste de profils
+void afficher_liste_profils(liste_profil* tete)
+{
+    if (tete == NULL) {
+        printf("La liste de profils est vide.\n");
+        return;
+    }
+
+    printf("Liste de profils :\n");
+    while (tete != NULL) {
+        affiche_profil(tete->pf);
+        tete = tete->suivant_profil;
+    }
+}
+// Ajouter un message à la liste chaînée
+void ajouter_message(liste_msg** tete, Message donnee) {
+    liste_msg* nouvel_message = (liste_msg*)malloc(sizeof(liste_msg));//allocation d une cellule de rubrique 
+    nouvel_message->msg = donnee;
+    nouvel_message->suivant_msg = NULL;
+
+    // Si la liste est vide la nouvel forum devient la tête de la liste
+    if (*tete == NULL) {
+        *tete = nouvel_message;
+        return;
+    }
+
+    // Sinon, parcourir la liste jusqu à la fin et ajouter le message
+    liste_msg* actuel = *tete;
+    while (actuel->suivant_msg != NULL) {
+        actuel = actuel->suivant_msg;
+    }
+    actuel->suivant_msg = nouvel_message;
+}
+
+// Afficher la liste des messages 
+void afficher_liste_messages(liste_msg* tete) {
+    if (tete == NULL) {
+        printf("La liste de messages est vide.\n");
+        return;
+    }
+
+    printf("Liste de messages :\n");
+    while (tete != NULL) {
+        afficher_message(tete->msg);
+        tete = tete->suivant_msg;
+    }
+}
+// Ajouter un auteur à la liste chaînée
+void ajouter_auteur(liste_atr** tete, Auteur donnee) {
+    liste_atr* nouvel_auteur = (liste_atr*)malloc(sizeof(liste_atr));//allocation d une cellule de rubrique 
+    nouvel_auteur->atr = donnee;
+    nouvel_auteur->suivant_atr = NULL;
+
+    // Si la liste est vide le nouvel auteur devient la tête de la liste
+    if (*tete == NULL) {
+        *tete = nouvel_auteur;
+        return;
+    }
+
+    // Sinon, parcourir la liste jusqu à la fin et ajouter l auteur
+    liste_atr* actuel = *tete;
+    while (actuel->suivant_atr != NULL) {
+        actuel = actuel->suivant_atr;
+    }
+    actuel->suivant_atr = nouvel_auteur;
+}
+
+// Afficher la liste des auteurs 
+void afficher_liste_auteurs(liste_atr* tete) {
+    if (tete == NULL) {
+        printf("La liste des auteurs est vide.\n");
+        return;
+    }
+
+    printf("Liste des auteurs :\n");
+    while (tete != NULL) {
+        afficher_auteur(tete->atr);
+        tete = tete->suivant_atr;
+    }
+}
+
+// f1:Lister toutes les réponses à un message donné,
+liste_msg *ajouter_reponses(Message donnee, liste_msg **lst_msg)
+{
+    liste_msg* liste_rps = (liste_msg*)malloc(sizeof(liste_msg));//allocation d une cellule de rubrique 
+    liste_rps->msg = donnee;
+    liste_rps->suivant_msg = NULL;
+    liste_msg* rps = *lst_msg;
+    while (rps)
+    {
+        if (rps->msg.id_original == donnee.id)
+        {
+            ajouter_message(&liste_rps, rps->msg);
+        }
+        rps = rps->suivant_msg;
+    }
+    return liste_rps;
+}
+//Afficher les messages d'une rubrique donnée par ordre chronologique de leur date de publication,
+// Fonction pour comparer deux dates
+int compare_dates(Date date1, Date date2)
+{
+    if (date1.tm_year > date2.tm_year) return 1;
+    else if (date1.tm_year < date2.tm_year) return -1;
+    else if (date1.tm_mon > date2.tm_mon) return 1;
+    else if (date1.tm_mon < date2.tm_mon) return -1;
+    else if (date1.tm_mday > date2.tm_mday) return 1;
+    else if (date1.tm_mday < date2.tm_mday) return -1;
+    else if (date1.tm_hour > date2.tm_hour) return 1;
+    else if (date1.tm_hour < date2.tm_hour) return -1;
+    else return 0;
+}
+liste_msg *liste_sortmsgrb(liste_msg *lst_msgrb)
+{
+    liste_msg *liste_ord;
+    
+    while (lst_msgrb)
+    {
+        ajouter_message(&liste_ord, lst_msgrb->msg);
+
+        // Réorganiser les messages déjà triés pour maintenir l'ordre chronologique
+        liste_msg *current = liste_ord->suivant_msg;
+        while (current->suivant_msg != NULL && compare_dates(current->msg.date_publication, current->suivant_msg->msg.date_publication) == 1)
+        {
+            // Échanger les messages
+            Message temp = current->msg;
+            current->msg = current->suivant_msg->msg;
+            current->suivant_msg->msg = temp;
+
+            current = current->suivant_msg;
+        }
+
+        lst_msgrb = lst_msgrb->suivant_msg;
+    }
+
+    return liste_ord->suivant_msg; // Retourner la liste à partir du deuxième élément (le premier est une sentinelle)
+}
+
+//Retrouver tous les messages d'un auteur (par son pseudo),
+liste_msg *ajouter_message_atr(char *psd, liste_msg **lst_msg)
+{
+    liste_msg* liste_msgatr = (liste_msg*)malloc(sizeof(liste_msg));//allocation d une cellule de rubrique 
+    liste_msgatr->msg.auteur.pseudo = psd;
+    liste_msgatr->suivant_msg = NULL;
+    liste_msg* msgatr = *lst_msg;
+     while (msgatr)
+    {
+         if (strcmp(msgatr->msg.auteur.pseudo, psd) == 0)
+        {   //ajouter le message a la liste des messages d un auteur 
+            ajouter_message(&liste_msgatr, msgatr->msg);
+        }
+        msgatr = msgatr->suivant_msg;
+    }
+    return liste_msgatr;
+}
+//Retrouver tous les messages d'un profil (à partir de son numéro d'inscription)
+liste_msg *ajouter_message_pf(int num, liste_msg **lst_msg)
+{
+    liste_msg* liste_msgpf = (liste_msg*)malloc(sizeof(liste_msg));
+    liste_msgpf->msg.auteur.profilatr.num = num;
+    liste_msgpf->suivant_msg = NULL;
+    liste_msg* msgpf = *lst_msg;
+     while (msgpf)
+    {
+        if (msgpf->msg.auteur.profilatr.num == num)
+        {   //ajouter le message a la liste des messages d un profil  
+            ajouter_message(&liste_msgpf, msgpf->msg);
+        }
+        msgpf = msgpf->suivant_msg;
+    }
+    return liste_msgpf;
+}
+// Rechercher un mot dans un texte de messages,
+
+void recherche_mot(char mot[],Message msg)
+{
+    
+    char *trouve = strstr(msg.texte, mot);
+
+    if (trouve != NULL) {
+        printf("Le mot a été trouvé ");
+    } else {
+        printf("Le mot n'a pas été trouvé.\n");
+    }
+
+}
+
+//— Retrouver tous les profils de personnes qui postent dans une rubrique donnée
+
+void affiche_profils_rubrique(liste_msg *cellmsg,rubrique rbdn)
+{
+    while(cellmsg)
+    {
+        if ((cellmsg->msg).id_rubrique==rbdn.id_rubrique)
+        {
+            affiche_profil(((cellmsg->msg).auteur).profilatr);
+            cellmsg=cellmsg->suivant_msg;
+        }
+    }
+}
+
+//— Afficher tous les messages du jour
+void affiche_msg_jour( liste_msg *tab_msg,int year,int mon ,int day)
+{
+    while(tab_msg)
+    {
+        if((tab_msg->msg).date_publication.tm_year== year)
+        {
+            if((tab_msg->msg).date_publication.tm_mon==mon)
+            {
+                if ((tab_msg->msg).date_publication.tm_mday==day)
+                    afficher_message(tab_msg->msg);
+            }
+        }
+        
+    }
+
+}
+//calculer le nombre de messages postés par jour
+
+int nombre_msgs_jour(Date date_pub , liste_msg *liste){
+   int total_messages = 0;
+   while(liste){
+    if (compare_dates(date_pub ,liste->msg.date_publication)==0){
+        ++total_messages;
+    }
+    liste=liste->suivant_msg;
+   }
+   return total_messages;
+}
+// calculer le nombre moyen du messages posté par un méme auteur
+int nombre_msgs_moyen_atr(liste_msg *msgs,liste_atr *atrs){
+    int total_messages=0, compteur=0;
+    while(atrs){
+       
+        
+        while(msgs){
+            if (strcmp(atrs->atr.pseudo, msgs->msg.auteur.pseudo)==0 ){
+               ++total_messages;//incrementation du nombre de messages 
+            }
+            msgs =msgs->suivant_msg;
+        }
+        ++compteur;//incrementation du nombre des auteurs 
+        atrs->suivant_atr;
+    }
+    return (total_messages/compteur);//moyen du nombre du messages par auteur 
+}
+// calculer le nombre de message du chaque rubrique 
+int nombre_msgs_rubrique(liste_msg *msgs,liste_rb *rbs){
+    
+    int i=0,tab_msg_rb[MAX_LENGTH];
+    while(rbs){
+        int nombre_messages=0;
+        while(msgs){
+            if(msgs->msg.id_rubrique==rbs->rb.id_rubrique){
+                ++nombre_messages;
+            }
+            tab_msg_rb[i]=nombre_messages;
+            msgs->suivant_msg;
+            ++i;
+        }
+        rbs->suivant_rb;
+    }
+    return tab_msg_rb[MAX_LENGTH];
+}
+//calculer moyen des mots dans un texte message
+int moyen_texte(liste_msg *liste){
+    int total_mots=0,nombre_msgs=0;
+    
+    while(liste){
+        const char *chaine=liste->msg.texte;
+        //parcours du texte caractere par caractere 
+        while(*chaine!='\0'){
+            if(*chaine==' '){
+                ++total_mots;
+            }
+            chaine++;//deplace le pointeur vers le caractere suivant dans la chaine
+        }++total_mots;
+        ++nombre_msgs;
+        liste->suivant_msg;
+    } 
+    return (total_mots/nombre_msgs);
+}
+//— Afficher les messages d'une rubrique donnée,
+
+void affiche_msg_rubrique(liste_msg *cellmsg, rubrique rbdn)
+{
+    while (cellmsg)
+    {
+        if ((cellmsg->msg).id_rubrique == rbdn.id_rubrique)
+        {
+            afficher_message(cellmsg->msg);
+        }
+        cellmsg = cellmsg->suivant_msg; // Mettre à jour à chaque itération
+    }
+}
+
+// Modifier une rubrique existante
+void modifier_rubrique(rubrique *r, char *nouveau_theme, char *nouveau_courriel, char sites[MAX_SITES][MAX_STRING_LENGTH])
+{
+    if (nouveau_theme != NULL) {
+        free(r->theme); // Libérer l'ancien thème
+        r->theme = strdup(nouveau_theme); // Affecter le nouveau thème
+        //strdup:effectue à la fois l'allocation de mémoire et la copie d'une chaîne de caractères
+    }
+    if (nouveau_courriel != NULL) {
+        free(r->courrielanim); // Libérer l'ancien courriel
+        r->courrielanim = strdup(nouveau_courriel); // Affecter le nouveau courriel
+    }
+    if (sites != NULL) {
+        for (int i = 0; i < MAX_SITES; ++i) 
+        {
+            strcpy(r->liste_site_internet[i], sites[i]); // Affecter les nouveaux sites internet
+        }
+    }
+    // Vous pouvez également ajouter des modifications supplémentaires ici
+}
+// Modifier un forum  existant
+void modifier_forum(forum *fr, char *nouveau_adresseinternet, char *nouveau_courrielresp)
+{
+    if (nouveau_adresseinternet != NULL) {
+        free(fr->adresseinternet); // Libérer l'ancien adresse internet
+        fr->adresseinternet = strdup(nouveau_adresseinternet); // Affecter la nouvelle adresse internet 
+        //strdup:effectue à la fois l'allocation de mémoire et la copie d'une chaîne de caractères
+    }
+    if (nouveau_courrielresp != NULL) {
+        free(fr->courrielresp); // Libérer l'ancien courrielresp
+        fr->courrielresp = strdup(nouveau_courrielresp); // Affecter le nouveau courrielresp
+    }
+}
+// Modifier un auteur  existant
+void modifier_auteur(Auteur *atr, char *nouveau_pseudo)
+{
+    if (nouveau_pseudo != NULL) {
+        free(atr->pseudo); // Libérer l'ancien pseudo
+        atr->pseudo = strdup(nouveau_pseudo); // Affecter le nouveau pseudo
+        //strdup:effectue à la fois l'allocation de mémoire et la copie d'une chaîne de caractères
+    }
+}
+// Modifier un message existant
+void modifier_message(Message *msg, char *nouveau_titre, char *nouveau_texte, int nouveau_id,int nouveau_id_original)
+{
+    if (nouveau_titre != NULL) {
+        free(msg->titre); // Libérer l'ancien titre
+        msg->titre = strdup(nouveau_titre); // Affecter un nouveau titre
+        //strdup:effectue à la fois l'allocation de mémoire et la copie d'une chaîne de caractères
+    }
+    if (nouveau_texte != NULL) {
+        free(msg->texte); // Libérer l'ancien texte
+        msg->texte = strdup(nouveau_texte); // Affecter le nouveau texte
+    }
+    // Si nouveau_id et nouveau_id_original sont des entiers
+    msg->id = nouveau_id; // Affecter le nouvel id
+    msg->id_original = nouveau_id_original; // Affecter le nouvel id_original
+}
+
+// Modifier un profil existant
+void modifier_profil(profil *prf, char *nouveau_nom, char *nouveau_prenom ,char *nouvelle_adr, char *nouveau_courriel ,int nouveau_num)
+{
+    if (nouveau_nom != NULL) {
+        free(prf->nom); // Libérer l'ancien nom
+        prf->nom = strdup(nouveau_nom); // Affecter la nouveau nom  
+        //strdup:effectue à la fois l'allocation de mémoire et la copie d'une chaîne de caractères
+    }
+    if (nouveau_prenom != NULL) {
+        free(prf->prenom); // Libérer l'ancien prenom
+        prf->prenom = strdup(nouveau_prenom); // Affecter le nouveau prenom
+    }
+    if (nouvelle_adr != NULL) {
+        free(prf->adr); // Libérer l'ancien adresse
+        prf->adr = strdup(nouvelle_adr); // Affecter le nouvelle adresse 
+    }
+    if (nouveau_courriel != NULL) {
+        free(prf->courriel); // Libérer l'ancien courriel
+        prf->courriel = strdup(nouveau_courriel); // Affecter le nouveau courriel
+    }
+    prf->num =nouveau_num; // Affecter le nouveau numero  de téléphone
+    
+}
+// Supprimer une rubrique existante
+void supprimer_rubrique(rubrique *r)
+{
+    free(r->theme); // Libérer le thème
+    free(r->courrielanim); // Libérer le courriel
+    // Aucun besoin de libérer la liste des sites internet, car c'est une variable statique.
+    // Réinitialisation de la structure à des valeurs par défaut (0 pour les entiers, NULL pour les pointeurs):
+    memset(r, 0, sizeof(rubrique));//memset: permet de remplir un bloc de mémoire avec une valeur spécifique
+}
+// Supprimer un forum existante
+void supprimer_forum(forum *fr)
+{
+    free(fr->adresseinternet); // Libérer le thème
+    free(fr->courrielresp); // Libérer le courriel
+    // Réinitialisation de la structure à des valeurs par défaut (0 pour les entiers, NULL pour les pointeurs):
+    memset(fr, 0, sizeof(forum));
+}
+// Supprimer un auteur existante
+void supprimer_auteur(Auteur *atr)
+{
+    free(atr->pseudo); // Libérer le pseudo
+    // Réinitialisation de la structure à des valeurs par défaut (0 pour les entiers, NULL pour les pointeurs):
+    memset(atr, 0, sizeof(Auteur));
+}
+// Supprimer un message existante
+void supprimer_message(Message *msg)
+{
+    free(msg->titre); // Libérer titre
+    free(msg->texte); // Libérer texte
+    msg->id = 0; 
+    msg->id_original = 0; 
+    // Réinitialisation de la structure à des valeurs par défaut (0 pour les entiers, NULL pour les pointeurs):
+    memset(msg, 0, sizeof(Message));
+}
+// Supprimer un profil existante
+void supprimer_profil(profil *prf)
+{
+    free(prf->nom); // Libérer nom
+    free(prf->prenom); // Libérer prenom
+    free(prf->adr); // Libérer adr
+    free(prf->courriel); // Libérer courriel
+    prf->num = 0; 
+    // Réinitialisation de la structure à des valeurs par défaut (0 pour les entiers, NULL pour les pointeurs):
+    memset(prf, 0, sizeof(profil));
+}
+
+
+//Ecrire une rubrique dans un fichier
+int ecrire_rubrique(FILE *fp, rubrique rb)
+{
+    if (fp == NULL) {
+        fputs("Le fichier n'a pas pu être ouvert\n", stderr);
+        return EXIT_FAILURE;
+    }
+
+    // Écriture des données d'une rubrique dans le fichier
+    fprintf(fp, "Theme: %s\n", rb.theme);
+    fprintf(fp, "Annee: %d\n", rb.datedecreation.tm_year);
+    fprintf(fp, "Mois: %d\n", rb.datedecreation.tm_mon);
+    fprintf(fp, "Jour: %d\n", rb.datedecreation.tm_mday);
+    fprintf(fp, "Courriel animateur: %s\n", rb.courrielanim);
+    fprintf(fp, "Liste des sites internet:\n");
+    for (int i = 0; i < MAX_SITES; ++i) {
+        if (strlen(rb.liste_site_internet[i]) > 0)
+        {
+            fprintf(fp, "%d : %s\n", i + 1, rb.liste_site_internet[i]);
+        }
+    }
+    fprintf(fp, "ID rubrique: %d\n", rb.id_rubrique);
+
+    return 0;
+}
+
+//Ecrire un forum dans un fichier
+int ecrire_forum(FILE *fp, forum fr)
+{
+    if (fp == NULL) {
+        fputs("Le fichier n'a pas pu être ouvert\n", stderr);
+        return EXIT_FAILURE;
+    }
+
+    // Écriture des données d'un forum dans le fichier
+    fprintf(fp, "adresse internet: %s\n", fr.adresseinternet);
+    fprintf(fp, "adresse email de son responsable: %s\n",fr.courrielresp);
+    return 0;
+}
+
+//Ecrire un profil dans un fichier
+int ecrire_profil(FILE *fp, profil prf)
+{
+    if (fp == NULL) {
+        fputs("Le fichier n'a pas pu être ouvert\n", stderr);
+        return EXIT_FAILURE;
+    }
+
+    // Écriture des données d'un profil dans le fichier
+    fprintf(fp, "nom: %s\n", prf.nom);
+    fprintf(fp, "prenom: %s\n",prf.nom);
+    fprintf(fp, "adresse: %s\n",prf.adr);
+    fprintf(fp, "Annee: %d\n", prf.datedenaissence.tm_year);
+    fprintf(fp, "Mois: %d\n", prf.datedenaissence.tm_mon);
+    fprintf(fp, "Jour: %d\n", prf.datedenaissence.tm_mday);
+    fprintf(fp, "adresse mail : %s\n",prf.courriel);
+    fprintf(fp, "numero de telephone: %d\n",prf.num);
+    
+    
+    return 0;
+}
+
+
+ //Ecrire un message dans un fichier
+int ecrire_message(FILE *fp, Message msg)
+{
+    if (fp == NULL) {
+        fputs("Le fichier n'a pas pu être ouvert\n", stderr);
+        return EXIT_FAILURE;
+    }
+
+    // Écriture des données d'une rubrique dans le fichier
+    fprintf(fp, "titre: %s\n", msg.titre);
+    fprintf(fp, "texte: %s\n", msg.texte);
+    fprintf(fp, "Annee: %d\n", msg.date_publication.tm_year);
+    fprintf(fp, "Mois: %d\n", msg.date_publication.tm_mon);
+    fprintf(fp, "Jour: %d\n", msg.date_publication.tm_mday);
+     fprintf(fp, "ID message : %d\n", msg.id_original);
+    fprintf(fp, "ID rubrique: %d\n", msg.id_rubrique);
+
+    return 0;
+}
+//Ecrire un auteur dans un fichier
+int ecrire_auteur(FILE *fp, Auteur atr)
+{
+    if (fp == NULL) {
+        fputs("Le fichier n'a pas pu être ouvert\n", stderr);
+        return EXIT_FAILURE;
+    }
+
+    // Écriture des données d'un auteur dans le fichier
+    fprintf(fp, "pseudo: %s\n", atr.pseudo);
+    fprintf(fp, "Annee: %d\n", atr.date_premier_msg.tm_year);
+    fprintf(fp, "Mois: %d\n", atr.date_premier_msg.tm_mon);
+    fprintf(fp, "Jour: %d\n", atr.date_premier_msg.tm_mday);
+    fprintf(fp, "Annee: %d\n", atr.date_dernier_msg.tm_year);
+    fprintf(fp, "Mois: %d\n", atr.date_dernier_msg.tm_mon);
+    fprintf(fp, "Jour: %d\n", atr.date_dernier_msg.tm_mday);
+    fprintf(fp, "nombre de messages: %d\n", atr.nombre_msg);
+    return 0;
+}
+//Ecrire une liste de forum dans un fichier
+void ecrire_liste_forum(FILE * fp,liste_fr * tete)
+{
+    liste_fr *courant=tete;
+    while(courant!=NULL)
+    {
+        ecrire_forum(fp,courant->fr);
+        courant=courant->suivant_fr;
+    }
+}
+//Ecrire une liste de rubrique dans un fichier
+void ecrire_liste_rubrique(FILE * fp,liste_rb * tete)
+{
+    liste_rb *courant = tete;
+    while(courant!=NULL){
+        ecrire_rubrique(fp,courant->rb);
+        courant=courant->suivant_rb;
+    }
+}
+//Ecrire une liste de profils dans un fichier
+void ecrire_liste_profil(FILE * fp,liste_profil * tete)
+{
+    liste_profil *courant=tete;
+    while(courant!=NULL)
+    {
+        ecrire_profil(fp,courant->pf);
+        courant=courant->suivant_profil;
+    }
+}//Ecrire une liste de messages dans un fichier
+void ecrire_liste_message(FILE * fp,liste_msg * tete)
+{
+    liste_msg *courant=tete;
+    while(courant!=NULL)
+    {
+        ecrire_message(fp,courant->msg);
+        courant=courant->suivant_msg;
+    }
+}
+//Ecrire une liste d'auteurs dans un fichier
+void ecrire_liste_auteur(FILE * fp,liste_atr * tete)
+{
+    liste_atr *courant=tete;
+    while(courant!=NULL)
+    {
+        ecrire_auteur(fp,courant->atr);
+        courant=courant->suivant_atr;
+    }
+}
+//extraire des rubriques à partir d'une fichier et les stocker dans une liste chainée
+liste_rb* extraire_rubrique(FILE* fp)
+{
+    liste_rb* tete = NULL;
+    char buffer[MAX_STRING_LENGTH]; // Utilisé pour lire les lignes du fichier
+
+    while (fgets(buffer, MAX_STRING_LENGTH, fp) != NULL) {
+        rubrique rb;
+
+        // Lire chaque champ d'une rubrique depuis le fichier
+        sscanf(buffer, "Theme: %s", rb.theme);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la ligne suivante
+        sscanf(buffer, "Annee: %d", &rb.datedecreation.tm_year);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Mois: %d", &rb.datedecreation.tm_mon);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Jour: %d", &rb.datedecreation.tm_mday);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Courriel animateur: %s", rb.courrielanim);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Passer à la prochaine ligne
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la première ligne des sites internet
+        for (int i = 0; i < MAX_SITES; ++i) {
+            sscanf(buffer, "%d : %s", &i, rb.liste_site_internet[i]);
+            fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la prochaine ligne
+        }
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Passer à la ligne ID rubrique
+        sscanf(buffer, "ID rubrique: %d", &rb.id_rubrique);
+        
+        // Ajouter cette rubrique à la liste chaînée
+        ajouter_rubrique(&tete, rb);
+    }
+
+    return tete;
+}
+
+//extraire des forum à partir d'une ficher et les stocker dans une liste chainée
+liste_fr* extraire_forums(FILE* fp)
+{
+    liste_fr* tete = NULL;
+    char buffer[MAX_STRING_LENGTH]; // Utilisé pour lire les lignes du fichier
+
+    while (fgets(buffer, MAX_STRING_LENGTH, fp) != NULL) {
+        forum fr;
+
+        // Lire chaque champ d'une rubrique depuis le fichier
+        sscanf(buffer, "adresse internet : %s", fr.adresseinternet);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la ligne suivante
+        sscanf(buffer, "adresse mail de responsable : %s", fr.courrielresp);
+        
+        // Ajouter cet forum  à la liste chaînée
+        ajouter_forum(&tete, fr);
+    }
+
+    return tete;
+}
+//extraire des messages à partir d'une fichier et les stocker dans une liste chainée
+liste_msg* extraire_message(FILE* fp)
+{
+    liste_msg* tete = NULL;
+    char buffer[MAX_STRING_LENGTH]; // Utilisé pour lire les lignes du fichier
+
+    while (fgets(buffer, MAX_STRING_LENGTH, fp) != NULL) {
+        Message msg;
+
+        // Lire chaque champ d'un message depuis le fichier
+        sscanf(buffer, "Titre: %s", msg.titre);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "texte: %s", msg.texte);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la ligne suivante
+        sscanf(buffer, "Annee: %d", &msg.date_publication.tm_year);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Mois: %d", &msg.date_publication.tm_mon);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Jour: %d", &msg.date_publication.tm_mday);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "texte: %s", msg.texte);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Passer à la prochaine ligne
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Passer à la ligne ID message
+        sscanf(buffer, "ID message: %d", &msg.id_original);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Passer à la ligne ID rubrique
+        sscanf(buffer, "ID rubrique: %d", &msg.id_rubrique);
+        
+        // Ajouter ce message à la liste chaînée
+        ajouter_message(&tete, msg);
+    }
+
+    return tete;
+}
+//extraire des auteurs à partir d'une fichier et les stocker dans une liste chainée
+liste_atr* extraire_auteur(FILE* fp)
+{
+    liste_atr* tete = NULL;
+    char buffer[MAX_STRING_LENGTH]; // Utilisé pour lire les lignes du fichier
+
+    while (fgets(buffer, MAX_STRING_LENGTH, fp) != NULL) {
+        Auteur atr;
+
+        // Lire chaque champ d'un auteur  depuis le fichier
+        sscanf(buffer, "pseudo: %s", atr.pseudo);
+        fgets(buffer, MAX_STRING_LENGTH, fp); // Lire la ligne suivante
+        sscanf(buffer, "Annee_premier_message: %d", &atr.date_premier_msg.tm_year);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Mois_premier_message: %d", &atr.date_premier_msg.tm_mon);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Jour_premier_message: %d", &atr.date_premier_msg.tm_mday);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+         sscanf(buffer, "Annee_dernier_message: %d", &atr.date_dernier_msg.tm_year);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Mois_dernier_message: %d", &atr.date_dernier_msg.tm_mon);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+        sscanf(buffer, "Jour_dernier_message: %d", &atr.date_dernier_msg.tm_mday);
+        fgets(buffer, MAX_STRING_LENGTH, fp);
+       
+        fgets(buffer, MAX_STRING_LENGTH, fp); 
+        sscanf(buffer, "nombre de messages : %d", &atr.nombre_msg);
+        
+        // Ajouter cet auteur  à la liste chaînée
+        ajouter_auteur(&tete, atr);
+    }
+
+    return tete;
+}
+//my main 
+
+
+int main()
+{
+    //****************tester les fonctions de rubrique*******************
+    
+    liste_rb* liste_rubriques = NULL;
+    int nombre_rubriques;//c est le nombre de rubriques qui tu veux l ajouter
+
+    printf("Nombre de rubriques à ajouter : ");
+    scanf("%d", &nombre_rubriques);
+    getchar(); // Pour consommer le caractère '\n' laissé dans le flux d'entrée après scanf
+
+
+    
+    FILE* fichier_rubrique = fopen("rubriques.txt", "w"); // Ouvrez un fichier en mode écriture
+
+    if (fichier_rubrique == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return EXIT_FAILURE;
+    }
+
+    int comt_id;// Déclarer une variable int pour stocker comt_id
+    for (int i = 0; i < nombre_rubriques; ++i) {
+        rubrique nouvelle_rubrique = rb_saisie(&comt_id);
+        ajouter_rubrique(&liste_rubriques, nouvelle_rubrique);
+    }
+
+    afficher_liste_rubriques(liste_rubriques);
+
+    // Écriture de la liste de rubriques dans le fichier
+    ecrire_liste_rubrique(fichier_rubrique, liste_rubriques);
+
+    // Fermeture du fichier
+    fclose(fichier_rubrique);
+    
+    //*****************tester les fonctions de forum**************
+    
+    liste_fr* liste_forums = NULL;
+    int nombre_forums;//c est le nombre de forums qui tu veux l ajouter
+
+    printf("Nombre de forums à ajouter : ");
+    scanf("%d", &nombre_forums);
+    getchar(); // Pour consommer le caractère '\n' laissé dans le flux d'entrée après scanf
+
+
+    
+    FILE* fichier_forum = fopen("forums.txt", "w"); // Ouvrez un fichier en mode écriture
+
+    if (fichier_forum == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return EXIT_FAILURE;
+    }
+
+    int comt_id_fr;// Déclarer une variable int pour stocker comt_id_fr
+    for (int i = 0; i < nombre_forums; ++i) {
+        forum nouvelle_forum = forum_saisie(&comt_id_fr);
+        ajouter_forum(&liste_forums, nouvelle_forum);
+    }
+
+    afficher_liste_forums(liste_forums);
+
+    // Écriture de la liste de forums dans le fichier
+    ecrire_liste_forum(fichier_forum, liste_forums);
+    // Fermeture du fichier
+    fclose(fichier_forum);
+    
+    
+    //***tester les fonctions de profil***
+    
+    liste_profil* liste_profils = NULL;
+    int nombre_profils;//c est le nombre de profils qui tu veux l ajouter
+
+    printf("Nombre de profils à ajouter : ");
+    scanf("%d", &nombre_profils);
+    getchar(); // Pour consommer le caractère '\n' laissé dans le flux d'entrée après scanf
+
+    
+    FILE* fichier_profil = fopen("profils.txt", "w"); // Ouvrez un fichier en mode écriture
+
+    if (fichier_profil == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return EXIT_FAILURE;
+    }
+
+   
+    for (int i = 0; i < nombre_profils; ++i) {
+        profil nouvelle_profil = profil_saisie();
+        ajouter_profil(&liste_profils, nouvelle_profil);
+    }
+
+    afficher_liste_profils(liste_profils);
+    afficher_liste_profils(liste_profils);
+
+    // Écriture de la liste de profils dans le fichier
+    ecrire_liste_profil(fichier_profil, liste_profils);
+
+    // Fermeture du fichier
+    fclose(fichier_profil);
+    //****tester les fonctions de message****
+    liste_msg* liste_messages = NULL;
+    int nombre_messages;//c est le nombre de messages qui tu veux l ajouter
+
+    printf("Nombre de messages à ajouter : ");
+    scanf("%d", &nombre_messages);
+    getchar(); // Pour consommer le caractère '\n' laissé dans le flux d'entrée après scanf
+    int comt_id_msg;// Déclarer une variable int pour stocker comt_id
+    for (int i = 0; i < nombre_messages ; ++i) {
+        Message nouvel_message = saisie_message(&comt_id_msg);
+        ajouter_message(&liste_messages, nouvel_message);
+        
+    }
+    FILE* fichier_message = fopen("messages.txt", "w"); // Ouvrez un fichier en mode écriture
+
+    if (fichier_message == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return EXIT_FAILURE;
+    }
+
+    
+    for (int i = 0; i < nombre_messages ; ++i) {
+        Message nouvel_message = saisie_message(&comt_id_msg);
+        ajouter_message(&liste_messages,nouvel_message);
+        // Consume the newline character left in the buffer
+    while (getchar() != '\n');
+    }
+
+    afficher_liste_messages(liste_messages);
+
+    // Écriture de la liste de messages dans le fichier
+    ecrire_liste_message(fichier_message, liste_messages);
+
+    // Fermeture du fichier
+    fclose(fichier_message);
+    afficher_liste_messages(liste_messages);
+    
+    //*****tester les fonctions d auteur*****
+    liste_atr* liste_auteurs = NULL;
+    int nombre_auteurs;//c est le nombre d auteurs qui tu veux l ajouter
+
+    printf("Nombre d auteurs à ajouter : ");
+    scanf("%d", &nombre_auteurs);
+    getchar(); // Pour consommer le caractère '\n' laissé dans le flux d'entrée après scanf
+
+    for (int i = 0; i < nombre_auteurs ; ++i) {
+        Auteur nouvel_auteur = saisie_auteur();
+        ajouter_auteur(&liste_auteurs, nouvel_auteur);
+        // Consume the newline character left in the buffer
+    while (getchar() != '\n');
+    }
+
+    afficher_liste_auteurs(liste_auteurs);
+    FILE* fichier_auteur = fopen("auteurs.txt", "w"); // Ouvrez un fichier en mode écriture
+
+    if (fichier_auteur == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return EXIT_FAILURE;
+    }
+
+    int comt_id_atr;// Déclarer une variable int pour stocker comt_id
+    for (int i = 0; i < nombre_auteurs ; ++i) {
+        Auteur nouvel_auteur = saisie_auteur(&comt_id_msg);
+        ajouter_auteur(&liste_auteurs, nouvel_auteur);
+    }
+
+    afficher_liste_auteurs(liste_auteurs);
+
+    // Écriture de la liste des auteurs dans le fichier
+    ecrire_liste_auteur(fichier_auteur, liste_auteurs);
+
+    // Fermeture du fichier
+    fclose(fichier_auteur);
+    
+
+
+    return 0;
+}
+
